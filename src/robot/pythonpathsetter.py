@@ -21,15 +21,19 @@ from os.path import abspath, dirname
 
 ROBOTDIR = dirname(abspath(__file__))
 
+# sys.path是一个列表list,他里面包含了已经添加到系统的环境变量路径
 def add_path(path, end=False):
     if not end:
         remove_path(path)
         sys.path.insert(0, path)
+        # 以最高优先级将path插入到sys.path中
     elif not any(fnmatch.fnmatch(p, path) for p in sys.path):
+        # 如果sys.path列表中没有任何元素和函数变量path匹配，则将path加入到sys.path列表中
         sys.path.append(path)
 
 def remove_path(path):
     sys.path = [p for p in sys.path if not fnmatch.fnmatch(p, path)]
+    # 将sys.path中与变量path不匹配的元素赋值给sys.path.即删除sys.path中path,并且保留其余部分
 
 
 # When, for example, robot/run.py is executed as a script, the directory

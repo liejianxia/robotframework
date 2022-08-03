@@ -104,6 +104,7 @@ class ExecutionStatus(RobotError):
                  skip=False, return_value=None):
         if '\r\n' in message:
             message = message.replace('\r\n', '\n')
+            #替换message中所有的换行符
         from robot.utils import cut_long_message
         super().__init__(cut_long_message(message))
         self.test_timeout = test_timeout
@@ -128,6 +129,7 @@ class ExecutionStatus(RobotError):
 
     @continue_on_failure.setter
     def continue_on_failure(self, continue_on_failure):
+        # 设置continue_on_failure的值
         self._continue_on_failure = continue_on_failure
         for child in getattr(self, '_errors', []):
             if child is not self:
@@ -186,18 +188,23 @@ class ExecutionFailures(ExecutionFailed):
 
     def _format_message(self, errors):
         messages = [e.message for e in errors]
+        # 将errors转换成列表
         if len(messages) == 1:
             return messages[0]
         prefix = 'Several failures occurred:'
         if any(msg.startswith('*HTML*') for msg in messages):
+            # 如果消息队列中以*HTML*开头，则使用_html_format()格式化，即删除消息中的*HTML*
             html_prefix = '*HTML* '
             messages = [self._html_format(msg) for msg in messages]
         else:
             html_prefix = ''
         if any(e.skip for e in errors):
             skip_idx = errors.index([e for e in errors if e.skip][0])
+            #  返回errors中skip为True的error索引，并赋值。
             skip_msg = messages[skip_idx]
+            # 找到message中第一个skip=True的消息
             messages = messages[:skip_idx] + messages[skip_idx+1:]
+            # 删除第一个skip=True的消息，并将剩余部分赋值给message
             if len(messages) == 1:
                 return '%s%s\n\nAlso failure occurred:\n%s' \
                        % (html_prefix, skip_msg, messages[0])
@@ -244,8 +251,12 @@ class UserKeywordExecutionFailed(ExecutionFailures):
         run_msg = run_errors.message if run_errors else ''
         td_msg = teardown_errors.message if teardown_errors else ''
         if not td_msg:
+            # 如果teardown错误消息为空，则返回运行错误消息
             return run_msg
+            # 此处修改为如下代码更佳，给出提示，上下风格保持一致
+            # return 'Keyword run failed:\n%s' % run_msg
         if not run_msg:
+            # 如果运行错误消息为空则返回teardown错误消息
             return 'Keyword teardown failed:\n%s' % td_msg
         return '%s\n\nAlso keyword teardown failed:\n%s' % (run_msg, td_msg)
 
