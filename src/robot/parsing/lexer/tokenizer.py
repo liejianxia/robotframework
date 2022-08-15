@@ -19,7 +19,9 @@ from .tokens import Token
 
 
 class Tokenizer:
+    # 识别空格分隔符
     _space_splitter = re.compile(r'(\s{2,}|\t)', re.UNICODE)
+    # 识别管道分隔符
     _pipe_splitter = re.compile(r'((?:\A|\s+)\|(?:\s+|\Z))', re.UNICODE)
 
     def tokenize(self, data, data_only=False):
@@ -45,6 +47,7 @@ class Tokenizer:
         else:
             splitter = self._split_from_spaces
         for value, is_data in splitter(line.rstrip()):
+            # is_data是如何获取的？--只要spliter能获取到value则 not is_data.通常一行中分隔符的第一个关键字为True，判断为分隔符(两个以上空格或者|)判断为False.
             if is_data:
                 append(Token(None, value, lineno, offset))
             elif include_separators:

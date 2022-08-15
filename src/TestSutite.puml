@@ -1,0 +1,82 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+package robot{
+    package model{
+        package testsuite{
+            class TestSuites{}
+            class TestSuite{
+                # name
+                # lonename
+                # metadata
+                # suites:TestSuites
+                # tests:TestCases
+                # setup
+                # has_setup
+                # teardown
+                # has_teardown
+                # id
+                # test_count:计算suite中suite数目
+                # has_test
+                # configure
+            }
+        }
+        package testcase{
+            class TestCase{
+                # setup
+                # has_setup
+                # teardown
+                # has_teardown
+                # id
+                # longname
+                # source
+                # name
+            }
+            class TestCases{}
+        }
+        package keyword{
+            class KeyWord{}
+'            class Keywords{} 4.0版本开始弃用
+        }
+        package "body" as bodyPy{
+            class ItemList{}
+            class BaseBody{}
+            abstract class Body{}
+
+            class BodyItem{}
+
+            class Tag{}
+        }
+        package modelobject{
+            class ModelObject{}
+        }
+        package fixture{}
+        package metadata{}
+        package configure{}
+    }
+}
+TestSuite "1"*-- TestCase
+TestSuite o-- KeyWord
+TestSuite   --|> ModelObject:父类
+TestSuite "1"*--   fixture
+TestSuite "1"*-- configure
+
+TestSuite   --  TestSuites:相互关联
+
+TestSuites  o-- TestCases
+
+metadata    --* TestSuite
+
+TestCase  "1"*-- Body
+TestCase    o-- KeyWord
+
+Body    --|>    BaseBody:Body父类
+BaseBody    --|>    ItemList:父类
+
+KeyWord --|>    BodyItem
+BodyItem    --|> ModelObject
+
+Tag --* TestCase
+
+TestCase "1"*--"many" fixture
+@enduml

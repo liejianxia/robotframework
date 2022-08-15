@@ -1,0 +1,82 @@
+@startmindmap
+'https://plantuml.com/mindmap-diagram
+
+caption suite
+title suite Object Items
+
++ suite
+++ doc
+++ has_setup
+++ has_teardown
+++ has_tests
+++ id
+++ longname
+++ name
+++ parent
+++ repr_args
++++ name
+++ rpa
+++ source
+++ test_count
+++ fixture_class
++++ BREAK
++++ CONTINUE
++++ ELSE
++++ ELSE IF
++++ EXCEPT
++++ FINALLY
++++ FOR
++++ IF
++++ IF_ELSE_ROOT
++++ ITERATION
++++ KEYWORD
++++ MESSAGE
++++ RETURN
++++ SETUP
++++ TEARDOWN
++++ TRY
++++ TRY_EXCEPT_ROOT
++++ WHILE
++++ args
++++ assign
++++ doc
++++ has_setup
++++ has_teardown
++++ id
++++ lineno
++++ name
++++ parent
++++ repr_args
++++ source
++++ tags
++++ teardown
++++ timeout
++++ type
+++ keywords
++++ deprecation_message
++++ nomal
++++ setup
++++ teardown
++++_ protect Attributes
+++++_ _abc_impl
+++++_ _common_attrs
+++++_ _item_class
+++++ _items
+++ metadata
+++ resource
+++ setup
+++ teardown
+++ test_class
+++ tests
+
+header
+suite items
+endheader
+
+center footer My super footer
+
+legend right
+  Short
+legend
+endlegend
+@endmindmap

@@ -1,0 +1,135 @@
+@startuml
+'https://plantuml.com/object-diagram
+object datasource
+package robot{
+    package run{
+'        map RobotFrameWork{
+'            main => []
+'
+'        }
+        json RobotFrameWork{
+            "main()" : ["setting", "builder", "suite", "writer"]
+        }
+        object settings{
+            options
+        }
+        object "builder" as b1{
+            # self.rpa
+            # self.included_suites
+            # self.allow_empty_suite
+            # self.process_curdir
+            # self.included_extensions
+        }
+        map "suite" as s1{
+            build() =>
+        }
+        object result{
+
+        }
+        object writer{
+        }
+
+    }
+
+    package running{
+        package "builder" as b2{
+            package builders{
+                json structure{
+                    "included_extensions": "extensions",
+                    "included_suites": "included_suites",
+                    "path":["children", "source", "init_file", "is_directory"]
+                }
+                object parser{
+                    included_extensions
+                    rpa
+                    process_curdir
+                }
+                class SuiteStructureBuilder{
+                    # build()
+                    # visit()
+                }
+                class SuiteStructureParser{
+                    # parse()
+                    # visit_file()
+                    -_built_suite()
+                }
+                object "suite" as s2{
+
+                }
+                class RobotParser{
+                    parse_suite_file()
+                }
+
+            }
+        }
+
+        class TestSuite{}
+        object "suite" as s3
+
+    }
+
+    package conf{
+        package "setting" as settings2{
+            class RobotSetting{
+                suite_names
+                extension
+                rpa
+                run_empty_suite
+            }
+        }
+    }
+
+    package parsing{
+        package suitestructure{
+            object visitor{
+
+            }
+            class SuiteStructure{
+                # visit()
+            }
+        }
+    }
+}
+
+'RobotFrameWork main函数执行过程
+RobotFrameWork -->  settings:读取用户和默认设置
+RobotFrameWork -->  b1:获取数据源设置
+RobotFrameWork -->  s1:构建
+RobotFrameWork -->  result:运行结果
+RobotFrameWork -->  writer:输出报告
+RobotSetting ..> settings:实例化
+datasource  --> RobotFrameWork:入参
+
+'setting 实现细节
+settings    ..> b1
+
+
+'build实现细节
+b1 ..> s1
+
+
+'suite实现细节:s1
+'suite.build()调用过程
+s1  -->     structure:step1
+'strcture实例化
+SuiteStructureBuilder ..>   structure:调用build()实例化
+SuiteStructure ..>  structure:build()后返回structure实例
+s1  -->     parser:step2
+'parser实例化
+SuiteStructureParser ..>    parser
+structure    -->     parser:对象入参
+
+s1  -->     s2:step3
+parser -->  s2:调用parse()实例化
+s2 ..|> s1:返回suite
+'汇总suite：s2实例化过程
+s2      ..|>    SuiteStructureParser:1.调用parse()
+SuiteStructureParser    ..|>    SuiteStructureBuilder:2.调用structure的visit()
+SuiteStructureBuilder   ..|>    SuiteStructure:3.调用SuiteStructure的visit()
+'s2      ..>    visitor:parse()时调用visit实例化
+SuiteStructure  ..|>    visitor
+SuiteStructureParser ..|>   visitor
+SuiteStructure  ..|>    SuiteStructureParser:4.调用SuiteStructureParser的visit_file()
+visitor   ..> structure:解析
+structure ..> s2:解析
+@enduml

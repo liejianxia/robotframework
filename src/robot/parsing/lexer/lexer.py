@@ -91,6 +91,7 @@ class Lexer:
                 data = [t for t in statement if t.type is None]
             if data:
                 self.lexer.input(data)
+                # 执行完input()后token_type就生成了
 
     def _read(self, source):
         try:
