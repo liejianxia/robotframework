@@ -1,0 +1,173 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+abstract class Application{}
+class RobotFrameWork{
+    # super().application()
+    # main()
+    # validate()
+}
+class TestSuiteBuilder{
+    # self.rpa
+    # self.lang
+    # self.included_suites
+    # self.included_extensions
+    # self.allow_empty_suite
+    # build()
+}
+class SuiteStructureBuilder{
+    # self.included_extensions
+    # self.included_suites
+    # build()
+}
+abstract class SuiteStructureVisitor{
+
+}
+class SuiteStructureParser{
+    # self.included_extensions
+    # self.included_suites
+    # self.rpa
+    # self.lang
+    # process_curdir
+    # _stack:list
+    # paser()
+    - _get_parser()
+    # visit_file()
+    - _build_suite()
+}
+class SuiteStructure{
+    # visit()
+}
+class TestDefaults{
+    # parent
+    - _setup
+    - _teardown
+    - _force_tags
+    # default_tags
+    # template
+    - _timeout
+}
+SuiteStructureParser  --|>    SuiteStructureVisitor
+SuiteStructureParser  ..|>    SuiteStructure
+SuiteStructureParser  <|..    SuiteStructure
+SuiteStructureParser  ..|>  TestDefaults
+class SettingsBuilder{
+
+}
+class SuiteBuilder{
+
+}
+class NodeVisitor{
+    # visit()
+}
+NodeVisitor <|--  SettingsBuilder
+NodeVisitor <|--  SuiteBuilder
+class RobotParser{
+    # process_curdir
+    # parse_suite_file()
+    - _build()
+    - _get_source()
+    - _get_curdir()
+}
+class ResetParser{
+    # super.process_curdir
+}
+abstract class BaseParser{}
+RobotParser --|>    BaseParser
+ResetParser --|>    RobotParser
+SuiteStructureParser ..|>   RobotParser
+SuiteStructureParser ..|>   ResetParser
+RobotParser ..|>    TestSuite_in_model
+RobotParser ..|>    SettingsBuilder
+RobotParser ..|>    SuiteBuilder
+class TestSuite_in_model{
+    + robot\running\model.py
+    # run()
+}
+class TestSuite_in_suiterunner{
+    + src\robot\running\suiterunner.py
+    # visit()
+}
+
+
+Application <|-- RobotFrameWork
+RobotFrameWork ..|> TestSuiteBuilder
+TestSuiteBuilder ..|> SuiteStructureBuilder
+TestSuiteBuilder ..|> SuiteStructureParser
+SuiteStructureParser ..|> SuiteStructureBuilder
+RobotFrameWork ..|> TestSuite_in_model
+class SuiteRunner{
+    # visit_test()
+}
+class SuiteVisitor{
+    # visit_suite()
+}
+TestSuite_in_model      ..|>   SuiteRunner
+TestSuite_in_model      ..|>   TestSuite_in_suiterunner
+TestSuite_in_suiterunner..|>   SuiteVisitor
+class ItemList{
+    # item_class
+    # common_attrs
+    # items
+    # visit()
+}
+SuiteVisitor    ..|>    ItemList
+class TestCase{
+    # name
+    # doc
+    # tags
+    # timeout
+    # lineno
+    # parent
+    # body
+    - _setup
+    - _teardown
+    # visit()
+}
+ItemList    ..|>    TestCase
+TestCase    ..|>    SuiteRunner
+class BodyRunner{
+    # context
+    # template
+    # run(body)
+}
+SuiteRunner ..|>    BodyRunner
+class Keyword{
+    # context
+    # run
+    # run()
+}
+KeyWord --|>    BodyItem
+KeyWord ..|>    BodyRunner
+class KeywordRunner{
+    # context
+    # run
+    # run()
+}
+BodyRunner  ..|>    KeywordRunner
+class UserKeywordRunner{
+    # context
+    # kw.args
+    # result
+    # run()
+    # _run()
+    # _execute()
+}
+KeywordRunner   ..|>    UserKeywordRunner
+UserKeywordRunner   ..|> BodyRunner
+BodyRunner ..|> Keyword
+Keyword ..|>    KeywordRunner
+class LibraryKeywordRunner{
+    # context
+    # kw.args
+    # run()
+    # _run()
+}
+KeywordRunner ..|> LibraryKeywordRunner
+class RunKeywordRunner{
+    # _run_with_output_captured_and_signal_monitor()
+    # _run_with_signal_monitoring()
+    # _runner_for
+}
+LibraryKeywordRunner ..|>   RunKeywordRunner
+@enduml

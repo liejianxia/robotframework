@@ -1,0 +1,17 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+package robot{
+    package api{}
+    package conf{}
+    package htmldata{}
+    package libdocpkg{}
+    package libraries{}
+    package reporting{}
+    package result{}
+    package running{}
+    package utils{}
+    package variables{}
+}
+
+@enduml

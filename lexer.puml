@@ -1,0 +1,224 @@
+@startuml
+'https://plantuml.com/class-diagram
+package robot{
+    package parsing{
+        package lexer{
+            package "lexer" as lexerPy{
+                    class Lexer{
+                    # lexer
+                    # data_only
+                    # tokenize_variables
+                    # statements
+                    # input()
+                }
+            }
+
+        package tokenize{
+            class Tokenize{
+                - _space_splitter
+                - _pipe_splitter
+                # tokenize()
+            }
+        }
+        package tokens{
+            class Token{
+            }
+        }
+        package context{
+            class ResourceFileContext{
+                # sections_class
+                # settings_class
+            }
+            class LexingContext{
+                # setting:setting.py
+            }
+            class FileContext{
+                # setting_section()
+            }
+            class TestCaseFileContext
+            class InitFileContext
+            class TestCaseContext
+            class KeywordContext
+        }
+        package "setting"as settingPy{
+            class setting{}
+            class TestCaseFileSettings{}
+        }
+        package blocklexers{
+            class FileLexer{
+                # lex()
+                # lexer_classes()
+            }
+            class BlockLexer{
+                - _lex_with_priority()
+                # lex()
+                # input()
+                # lexer_for()
+                # lexer.input()
+            }
+            class SettingSectionLexer{
+                # handles()
+                # lexer_classes()
+            }
+            class VariableSectionLexer{
+                # handles()
+                # lexer_classes()
+            }
+            class TestCaseSectionLexer{
+                # handles()
+                # lexer_classes()
+            }
+            class KeywordSectionLexer{
+                # handles()
+                # lexer_classes()
+            }
+            class CommentSectionLexer{
+                # handles()
+                # lexer_classes()
+            }
+            class ErrorSectionLexer{
+                # handles()
+                # lexer_classes()
+            }
+            class ImplicitCommentSectionLexer{
+                # handles()
+                # lexer_classes()
+            }
+            class SectionLexer{
+                # accepts_more()
+            }
+             class TestOrKeywordLexer{
+                # accepts_more()
+                # input()
+                - _handle_name_or_indentation()
+                # lexer_classes()
+             }
+             class TestCaseLexer
+             class KeywordLexer
+             class NestedBlockLexer
+             class ForLexer
+             class WhileLexer
+             class IfLexer
+             class InlineIfLexer
+             class TryLexer
+        }
+        package statementlexers{
+            abstract class "Lexer" as BaseLexer
+            class SingleType{
+                # lex()
+            }
+            class StatementLexer{}
+            class WhileHeaderLexer
+            class TypeAndArguments{
+                # lex()
+            }
+            class KeywordCallLexer
+            class ForHeaderLexer
+            class IfHeaderLexer
+            class ElseIfHeaderLexer
+            class ElseHeaderLexer
+            class TryHeaderLexer
+            class ExceptHeaderLexer
+            class FinallyHeaderLexer
+            class InlineIfHeaderLexer
+            class EndLexer
+            class ReturnLexer
+            class ContinueLexer
+            class BreakLexer
+            class VariableLexer
+            class SectionHeaderLexer{}
+            class SettingSectionHeaderLexer
+            class VariableSectionHeaderLexer
+            class TestCaseSectionHeaderLexer
+            class KeywordSectionHeaderLexer
+            class CommentSectionHeaderLexer
+            class ErrorSectionHeaderLexer
+            class CommentLexer
+            class SettingLexer
+            class TestOrKeywordSettingLexer
+        }
+        package section{
+            class Sections{
+                # setting()
+                # handles()
+            }
+            class TestCaseFileSection{}
+    }
+}
+
+Lexer *-- ResourceFileContext
+Lexer   *--  FileLexer
+
+'ResourceFileContext o-- setting
+'ResourceFileContext --|> LexingContext
+FileContext --|> LexingContext
+ResourceFileContext --|> FileContext
+InitFileContext --|> FileContext
+KeywordContext  --|> LexingContext
+TestCaseContext --|> LexingContext
+
+FileLexer --|> BlockLexer
+SectionLexer --|> BlockLexer
+BlockLexer  --|>    BaseLexer
+
+
+Tokenize    o-- Token
+
+
+StatementLexer --|> BaseLexer
+SingleType --|> StatementLexer
+SettingLexer --|> StatementLexer
+KeywordCallLexer --|> StatementLexer
+ForHeaderLexer --|> StatementLexer
+SectionHeaderLexer --|> SingleType
+CommentLexer    --|> SingleType
+SettingSectionHeaderLexer --|> SectionHeaderLexer
+VariableSectionHeaderLexer --|> SectionHeaderLexer
+TestCaseSectionHeaderLexer --|> SectionHeaderLexer
+KeywordSectionHeaderLexer --|> SectionHeaderLexer
+CommentSectionHeaderLexer --|> SectionHeaderLexer
+ErrorSectionHeaderLexer --|> SectionHeaderLexer
+
+TypeAndArguments --|> StatementLexer
+VariableLexer --|> TypeAndArguments
+IfHeaderLexer --|> TypeAndArguments
+InlineIfHeaderLexer --|> TypeAndArguments
+ElseIfHeaderLexer --|> TypeAndArguments
+ElseHeaderLexer --|> TypeAndArguments
+TryHeaderLexer --|> TypeAndArguments
+ExceptHeaderLexer --|> TypeAndArguments
+FinallyHeaderLexer --|> TypeAndArguments
+WhileHeaderLexer --|> TypeAndArguments
+EndLexer --|> TypeAndArguments
+ReturnLexer --|> TypeAndArguments
+ContinueLexer --|> TypeAndArguments
+BreakLexer --|> TypeAndArguments
+
+
+
+TestOrKeywordSettingLexer --|> SettingLexer
+
+
+SettingSectionLexer --|> SectionLexer
+VariableSectionLexer --|> SectionLexer
+TestCaseSectionLexer --|> SectionLexer
+KeywordSectionLexer --|> SettingSectionLexer
+CommentSectionLexer --|> SectionLexer
+ErrorSectionLexer --|> SectionLexer
+ImplicitCommentSectionLexer --|> SectionLexer
+'赋值给Lexer的ctx属性
+FileContext <|--  TestCaseFileContext
+
+KeywordLexer --|> TestOrKeywordLexer
+TestCaseLexer --|> TestOrKeywordLexer
+TestOrKeywordLexer --|> BlockLexer
+
+NestedBlockLexer --|> BlockLexer
+
+ForLexer --|> NestedBlockLexer
+WhileLexer --|> NestedBlockLexer
+IfLexer --|> NestedBlockLexer
+InlineIfLexer --|> NestedBlockLexer
+TryLexer --|> NestedBlockLexer
+
+@enduml
